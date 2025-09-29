@@ -57,7 +57,7 @@ docker run -d --gpus=all\\<BR>
 docker ps    <BR>
 <BR>
 假设显示如下<BR>
-/workspace git:(master) docker ps<BR>
+**/workspace git:(master) docker ps<BR>**
 **CONTAINER ID**   IMAGE           COMMAND               CREATED          STATUS          PORTS                                           NAMES<BR>
 **dad073e1a5a7**   ollama/ollama   "/bin/ollama serve"   11 minutes ago   Up 11 minutes   0.0.0.0:11434->11434/tcp, :::11434->11434/tcp   kind_golick<BR>
 假设容器ID为 dad073e1a5a7(如上面运行的例子），运行下面的命令下载并启用qwen3:30b-a3b-thinking-2507-q4_K_M 模型，下载速度一般为20-40MB/s，该模型19GB大约10-15min完成<BR>
@@ -74,7 +74,18 @@ docker exec -it dad073e1a5a7 ollama run qwen3:30b-a3b-thinking-2507-q4_K_M --ver
 2）8C32G + 16G显存T4的GPU应用空间 达到30tokens/s（该配置每周能薅11+小时）<BR>
 3）20C116G + 24G显存A10的GPU应用空间 达到100tokens/s！！！（该配置每周能薅4+小时）<BR>
 
+**Tips:<BR>**
+1、有时应用空间异常关机后ollama模型所在的硬盘blob损坏后会造成ollama run 启用模型时失败，即时用docker stop <container ID> 后重启ollama也不行。通过docker logs -f <container ID>
+能在log中发现是blob损坏所致<BR>
+这时就要用以下命令（其中dad073e1a5a7 替换成docker ps中ollama进程显示的container ID）来删掉所有已下载的模型缓存（仅模型文件，不影响别的东西），并重拉模型。<BR>
+docker exec -it dad073e1a5a7 sh -lc '\\  <BR>
+  rm -rf /root/.ollama/models/blobs; \\  <BR>
+  rm -rf /root/.ollama/models/manifests; \\  <BR>
+  ollama pull qwen3:30b-a3b-thinking-2507-q4_K_M \\ <BR>
+' <BR>
+docker exec -it dad073e1a5a7 ollama run qwen3:30b-a3b-thinking-2507-q4_K_M --verbose <BR>
+2、所以应用空间退出时最好主动先退出ollama run进程，然后docker stop <container ID>,最后再停止应用空间！ <BR>
 ## 3. CherryStudio集成ollama API 服务
-如下图所示，把刚刚打开的Ollama的API Web服务地址集成到CherryStudio的模型服务中。
+如下图所示，把刚刚打开的Ollama的API Web服务地址集成到CherryStudio的模型服务中。<BR>
 ![CherryStudio集成ollama API 服务](cherryStudio1.png)
 
