@@ -1,5 +1,9 @@
-# How2RunOllamaInCloudStudio
-如何在腾讯面向开发者的cloud studio上免费用ollama运行Qwen3-30b-a3b-think Q4量化模型，模型大小19GB<BR>
+# How to run Ollama in Tencent's free Cloud Studio
+如何在腾讯面向开发者的cloud studio上免费用ollama运行Qwen3-30b-a3b-think Q4量化模型(模型大小19GB)，并提供API Web接口给CherryStudio使用<BR>
+
+## 亮点
+- 16C32G的CPU应用空间 达到20token/s！（比4060笔记本16G内存的联想Y7000p实测还快5t/s，该配置每天能薅1小时）<BR>**
+- 20C116G + 24G显存A10的GPU应用空间 达到100tokens/s！！！（该配置每周能薅4+小时）<BR>**
 
 ## 1. 在腾讯Cloud Studio上创建一个只有Ubuntu的应用并安装Ollama
 [https://cloudstudio.net/my-app](https://cloudstudio.net/my-app)
@@ -70,9 +74,9 @@ docker exec -it dad073e1a5a7 ollama run qwen3:30b-a3b-thinking-2507-q4_K_M --ver
 ![ollama1](ollama1.png)
 
 **实测qwen3:30b-a3b-thinking-2507-q4_K_M 模型速度**<BR>
-1）16C32G CPU应用空间 达到20token/s！（比4060笔记本16G内存的联想Y7000p实测还快5t/s，该配置每天能薅1小时）<BR>
+**1）16C32G CPU应用空间 达到20token/s！（比4060笔记本16G内存的联想Y7000p实测还快5t/s，该配置每天能薅1小时）<BR>**
 2）8C32G + 16G显存T4的GPU应用空间 达到30tokens/s（该配置每周能薅11+小时）<BR>
-3）20C116G + 24G显存A10的GPU应用空间 达到100tokens/s！！！（该配置每周能薅4+小时）<BR>
+**3）20C116G + 24G显存A10的GPU应用空间 达到100tokens/s！！！（该配置每周能薅4+小时）<BR>**
 
 **Tips:<BR>**
 1、有时应用空间异常关机后ollama模型所在的硬盘blob损坏后会造成ollama run 启用模型时失败，即时用docker stop <container ID> 后重启ollama也不行。通过docker logs -f <container ID>
