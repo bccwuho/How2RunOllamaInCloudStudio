@@ -1,2 +1,50 @@
 # How2RunOllamaInCloudStudio
-如何在腾讯面向开发者的cloud studio上免费运行ollama
+如何在腾讯面向开发者的cloud studio上免费用ollama运行Qwen3-30b-a3b-think Q4量化模型，模型大小19GB
+
+## 1. 在腾讯Cloud Studio上创建一个只有Ubuntu的应用并安装Ollama
+[https://cloudstudio.net/my-app](https://cloudstudio.net/my-app)
+1）创建应用，模板选Ubuntu，内存选32G及以上 或者 8C32G+16G显存T4
+安装完成后，硬盘使用了~0.5GB
+2）打开终端，拉取 Ollama 官方镜像（如果未预装）：
+docker pull ollama/ollama
+安装完成后，硬盘使用了3.6GB
+
+## 2. 运行Ollama，并下载qwen3:30b-a3b-thinking-2507-q4_K_M 模型（从[ollama.com](https://ollama.com/library/qwen3/tags)得到模型的信息和名字）
+1）如果没有GPU使用下面的命令启动ollama
+docker run -d \
+  -v ollama:/root/.ollama \
+  -p 11434:11434 \
+  --restart always \
+  ollama/ollama
+此时内存使用了0.8G、硬盘使用了3.6GB
+2）如果有GPU，直接使用下面的命令启动ollama
+docker run -d --gpus=all\
+  -v ollama:/root/.ollama \
+  -p 11434:11434 \
+  --restart always \
+  ollama/ollama
+**如果失败则是因为NVidia显卡在Docker这个Container中运行的关系，用以下方法解决**
+Configure NVIDIA Container Runtime to bypass device filtering：A workaround documented in community reports involves telling the NVIDIA runtime to skip strict device cgroup enforcement by editing its config:
+Edit or create the config file:
+
+sudo mkdir -p /etc/nvidia-container-runtime
+sudo nano /etc/nvidia-container-runtime/config.toml
+Add or ensure the following 2 lines are present:
+
+[nvidia-container-cli]
+no-cgroups = true
+###The key setting is `no-cgroups = true`, which disables cgroup device rule enforcement and avoids the `bpf_prog_query` call .
+
+[nvidia-container-runtime]
+debug = "/tmp/nvidia-container-runtime.log"
+
+用^x退出编辑后再次运行ollama启动命令就OK了
+sudo systemctl restart docker
+docker run -d --gpus=all\
+  -v ollama:/root/.ollama \
+  -p 11434:11434 \
+  --restart always \
+  ollama/ollama
+
+
+
