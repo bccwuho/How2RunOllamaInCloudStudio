@@ -67,8 +67,10 @@ docker exec -it dad073e1a5a7 ollama run qwen3:30b-a3b-thinking-2507-q4_K_M --ver
 此时内存使用了20G、硬盘使用了22GB，如果有GPU的话GPU显存使用了18G（T4的话只有16G都占满），GPU占用率80%<BR>
 
 点击右边栏的端口管理（如下图所示）能打开Ollama的API Web服务，此时应显示Ollama is running<BR>
+![ollama1](ollama1.png)
 
 ## 3. CherryStudio集成ollama API 服务
+
 
 
 
