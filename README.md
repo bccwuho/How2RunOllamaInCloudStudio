@@ -9,7 +9,7 @@
 docker pull ollama/ollama<BR>
 安装完成后，硬盘使用了3.6GB<BR>
 
-## 2. 运行Ollama，并下载qwen3:30b-a3b-thinking-2507-q4_K_M 模型（从[ollama.com](https://ollama.com/library/qwen3/tags)得到模型的信息和名字）
+## 2. 运行Ollama，并下载启用qwen3:30b-a3b-thinking-2507-q4_K_M 模型（从[ollama.com](https://ollama.com/library/qwen3/tags)得到模型的信息和名字）
 ### 1.1）如果应用空间没有GPU使用下面的命令启动ollama
 docker run -d \\<BR>
   -v ollama:/root/.ollama \\<BR>
@@ -63,8 +63,16 @@ docker ps    <BR>
 假设容器ID为 dad073e1a5a7(如上面运行的例子），运行下面的命令下载并启用qwen3:30b-a3b-thinking-2507-q4_K_M 模型，下载速度一般为20-40MB/s，该模型19GB大约10-15min完成<BR>
 <BR>
 docker exec -it dad073e1a5a7 ollama run qwen3:30b-a3b-thinking-2507-q4_K_M --verbose<BR>
-<BR>
+在Ollama的CLI界面中可以进行对话了<BR>
 此时内存使用了20G、硬盘使用了22GB，如果有GPU的话GPU显存使用了18G（T4的话只有16G都占满），GPU占用率80%<BR>
+
+点击右边栏的端口管理（如下图所示）能打开Ollama的API Web服务，此时应显示Ollama is running<BR>
+
+## 3. CherryStudio集成ollama API 服务
+
+
+
+
 
 **实测qwen3:30b-a3b-thinking-2507-q4_K_M 模型速度**<BR>
 1）16C32G CPU应用空间 达到20token/s！（比4060笔记本16G内存的联想Y7000p实测还快5t/s，该配置每天能薅1小时）<BR>
