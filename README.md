@@ -1,9 +1,9 @@
 # How to run Ollama in Tencent's free Cloud Studio
-如何在腾讯面向开发者的cloud studio上免费用ollama运行Qwen3-30b-a3b-think Q4量化模型(模型大小19GB)，并提供API Web接口给CherryStudio使用<BR>
+如何在腾讯面向开发者的cloud studio上免费用ollama运行Qwen3-30b-a3b-think-2507 Q4量化模型(模型大小19GB，性能相当于GPT5非思考/Claude3.7Sonnet/Deepseek V3-0528模型)，并提供API Web接口给CherryStudio使用<BR>
 
 ## 亮点
 - 16C32G的CPU应用空间 达到20token/s！（比4060笔记本16G内存的联想Y7000p实测还快5t/s，该配置每天能薅1小时）<BR>
-- 20C116G + 24G显存A10的GPU应用空间 达到100tokens/s！！！（该配置每周能薅4+小时，甚至能运行Qwen3-30b-a3b-think-fp16 和 Qwen3-80b-a3b-Q8（至今未上线Ollama）模型）<BR>
+- **20C116G + 24G显存A10的GPU应用空间 达到100tokens/s！！！（该配置每周能薅4+小时，甚至能运行qwen3:30b-a3b-thinking-2507-fp16（性能相当于GPT5mini/Claude4Opus/Gemini2.5Flash/DS R1）和 Qwen3-Next80b-a3b-Q8（至今未上线Ollama）模型）** <BR>
 
 ## 1. 在腾讯Cloud Studio上创建一个只有Ubuntu的应用并安装Ollama
 [https://cloudstudio.net/my-app](https://cloudstudio.net/my-app)
