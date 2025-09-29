@@ -3,7 +3,7 @@
 
 ## 亮点
 - 16C32G的CPU应用空间 达到20token/s！（比4060笔记本16G内存的联想Y7000p实测还快5t/s，该配置每天能薅1小时）<BR>
-- 20C116G + 24G显存A10的GPU应用空间 达到100tokens/s！！！（该配置每周能薅4+小时）<BR>
+- 20C116G + 24G显存A10的GPU应用空间 达到100tokens/s！！！（该配置每周能薅4+小时，甚至能运行Qwen3-30b-a3b-think-fp16 和 Qwen3-80b-a3b-Q8（至今未上线Ollama）模型）<BR>
 
 ## 1. 在腾讯Cloud Studio上创建一个只有Ubuntu的应用并安装Ollama
 [https://cloudstudio.net/my-app](https://cloudstudio.net/my-app)
@@ -88,7 +88,7 @@ docker exec -it dad073e1a5a7 sh -lc '\\  <BR>
   ollama pull qwen3:30b-a3b-thinking-2507-q4_K_M \\ <BR>
 ' <BR>
 docker exec -it dad073e1a5a7 ollama run qwen3:30b-a3b-thinking-2507-q4_K_M --verbose <BR>
-2、所以应用空间退出时最好主动先退出ollama run进程，然后docker stop <container ID>,最后再停止应用空间！ <BR>
+2、所以应用空间退出时最好主动先退出ollama run进程，然后docker stop <container ID>,再停止应用空间，最后等空间完全停止后再关闭浏览器的窗口！ <BR>
 3、ollama由于是通过Docker容器安装的，所以实际目录不在/root/.ollama 或 /home/你的用户/.ollama，而是要通过如下方法找到真实的目录<BR>
 你之前运行容器时用了：-v ollama:/root/.ollama (这表示使用了一个名为 ollama 的 Docker volume)<BR>
 执行以下命令查看它的实际位置：<BR>
