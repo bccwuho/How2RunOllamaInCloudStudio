@@ -69,16 +69,12 @@ docker exec -it dad073e1a5a7 ollama run qwen3:30b-a3b-thinking-2507-q4_K_M --ver
 点击右边栏的端口管理（如下图所示）能打开Ollama的API Web服务，此时应显示Ollama is running<BR>
 ![ollama1](ollama1.png)
 
-## 3. CherryStudio集成ollama API 服务
-
-
-
-
-
-
 **实测qwen3:30b-a3b-thinking-2507-q4_K_M 模型速度**<BR>
 1）16C32G CPU应用空间 达到20token/s！（比4060笔记本16G内存的联想Y7000p实测还快5t/s，该配置每天能薅1小时）<BR>
 2）8C32G + 16G显存T4的GPU应用空间 达到30tokens/s（该配置每周能薅11+小时）<BR>
 3）20C116G + 24G显存A10的GPU应用空间 达到100tokens/s！！！（该配置每周能薅4+小时）<BR>
 
+## 3. CherryStudio集成ollama API 服务
+如下图所示，把刚刚打开的Ollama的API Web服务地址集成到CherryStudio的模型服务中。
+![CherryStudio集成ollama API 服务](cherryStudio1.png)
 
