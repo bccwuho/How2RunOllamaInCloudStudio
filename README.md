@@ -11,21 +11,21 @@ docker pull ollama/ollama
 
 ## 2. 运行Ollama，并下载qwen3:30b-a3b-thinking-2507-q4_K_M 模型（从[ollama.com](https://ollama.com/library/qwen3/tags)得到模型的信息和名字）
 ### 1.1）如果应用空间没有GPU使用下面的命令启动ollama
-docker run -d \
-  -v ollama:/root/.ollama \
-  -p 11434:11434 \
-  --restart always \
+docker run -d \\
+  -v ollama:/root/.ollama \\
+  -p 11434:11434 \\
+  --restart always \\
   ollama/ollama
 此时内存使用了0.8G、硬盘使用了3.6GB
 ### 1.2）如果应用空间有GPU，直接使用下面的命令启动ollama
-docker run -d --gpus=all\
-  -v ollama:/root/.ollama \
-  -p 11434:11434 \
-  --restart always \
+docker run -d --gpus=all\\
+  -v ollama:/root/.ollama \\
+  -p 11434:11434 \\
+  --restart always \\
   ollama/ollama
 **如果失败则是因为NVidia显卡在Docker这个Container中运行的关系，用以下方法解决**
 Configure NVIDIA Container Runtime to bypass device filtering：A workaround documented in community reports involves telling the NVIDIA runtime to skip strict device cgroup enforcement by editing its config:
-Edit or create the config file:
+Edit or create the config file:<BR>
 
 sudo mkdir -p /etc/nvidia-container-runtime
 sudo nano /etc/nvidia-container-runtime/config.toml
@@ -38,28 +38,28 @@ no-cgroups = true
 [nvidia-container-runtime]
 debug = "/tmp/nvidia-container-runtime.log"
 
-用^x退出编辑后再次运行ollama启动命令就OK了
+用^x退出编辑后再次运行ollama启动命令就OK了<BR>
 sudo systemctl restart docker
-docker run -d --gpus=all\
-  -v ollama:/root/.ollama \
-  -p 11434:11434 \
-  --restart always \
+docker run -d --gpus=all\\
+  -v ollama:/root/.ollama \\
+  -p 11434:11434 \\
+  --restart always \\
   ollama/ollama
 此时内存使用了0.8G、硬盘使用了3.6GB
 
 ### 2）在Docker中下载并启用qwen3:30b-a3b-thinking-2507-q4_K_M 模型
-查看容器 ID 或名称
+查看容器 ID 或名称<BR>
 docker ps    
-➜  /workspace git:(master) docker ps
-**CONTAINER ID**   IMAGE           COMMAND               CREATED          STATUS          PORTS                                           NAMES
-**dad073e1a5a7**   ollama/ollama   "/bin/ollama serve"   11 minutes ago   Up 11 minutes   0.0.0.0:11434->11434/tcp, :::11434->11434/tcp   kind_golick
-假设容器ID为 dad073e1a5a7(如上面运行的例子），运行下面的命令下载并启用qwen3:30b-a3b-thinking-2507-q4_K_M 模型，下载速度一般为20-40MB/s，该模型19GB大约10~15min完成
+➜  /workspace git:(master) docker ps<BR>
+**CONTAINER ID**   IMAGE           COMMAND               CREATED          STATUS          PORTS                                           NAMES<BR>
+**dad073e1a5a7**   ollama/ollama   "/bin/ollama serve"   11 minutes ago   Up 11 minutes   0.0.0.0:11434->11434/tcp, :::11434->11434/tcp   kind_golick<BR>
+假设容器ID为 dad073e1a5a7(如上面运行的例子），运行下面的命令下载并启用qwen3:30b-a3b-thinking-2507-q4_K_M 模型，下载速度一般为20-40MB/s，该模型19GB大约10~15min完成<BR>
 docker exec -it dad073e1a5a7 ollama run qwen3:30b-a3b-thinking-2507-q4_K_M --verbose
-此时内存使用了~20G、硬盘使用了~22GB，如果有GPU的话GPU显存使用了18G（T4的话只有16G都占满），GPU占用率80%
+此时内存使用了~20G、硬盘使用了~22GB，如果有GPU的话GPU显存使用了18G（T4的话只有16G都占满），GPU占用率80%<BR>
 
-**实测qwen3:30b-a3b-thinking-2507-q4_K_M 模型速度**
-1）16C32G CPU应用空间 达到17token/s！（该配置每天能薅1小时）
-2）8C32G + 16G显存T4的GPU应用空间 达到30tokens/s（该配置每周能薅10+小时）
-3）20C116G + 24G显存A10的GPU应用空间 达到100tokens/s！！！（该配置每周能薅3+小时）
+**实测qwen3:30b-a3b-thinking-2507-q4_K_M 模型速度**<BR>
+1）16C32G CPU应用空间 达到17token/s！（该配置每天能薅1小时）<BR>
+2）8C32G + 16G显存T4的GPU应用空间 达到30tokens/s（该配置每周能薅10+小时）<BR>
+3）20C116G + 24G显存A10的GPU应用空间 达到100tokens/s！！！（该配置每周能薅3+小时）<BR>
 
 
