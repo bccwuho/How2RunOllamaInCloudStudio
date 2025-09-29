@@ -89,6 +89,24 @@ docker exec -it dad073e1a5a7 sh -lc '\\  <BR>
 ' <BR>
 docker exec -it dad073e1a5a7 ollama run qwen3:30b-a3b-thinking-2507-q4_K_M --verbose <BR>
 2、所以应用空间退出时最好主动先退出ollama run进程，然后docker stop <container ID>,最后再停止应用空间！ <BR>
+3、ollama由于是通过Docker容器安装的，所以实际目录不在/root/.ollama 或 /home/你的用户/.ollama，而是要通过如下方法找到真实的目录<BR>
+你之前运行容器时用了：-v ollama:/root/.ollama (这表示使用了一个名为 ollama 的 Docker volume)<BR>
+执行以下命令查看它的实际位置：<BR>
+docker volume inspect ollama<BR>
+输出类似：<BR>
+json<BR>
+[<BR>
+    {<BR>
+        "Driver": "local",<BR>
+        "Mountpoint": "/var/lib/docker/volumes/ollama/_data",<BR>
+        "Name": "ollama",<BR>
+        ...<BR>
+    }<BR>
+]<BR>
+所以，Ollama 的完整目录在主机上的路径是：/var/lib/docker/volumes/ollama/_data ，在此目录下你会看到：<BR>
++ models/：存放所有模型文件（GGUF）<BR>
++ config.json、logs/ 等<BR>
+
 ## 3. CherryStudio集成ollama API 服务
 如下图所示，把刚刚打开的Ollama的API Web服务地址集成到CherryStudio的模型服务中。<BR>
 ![CherryStudio集成ollama API 服务](cherryStudio1.png)
