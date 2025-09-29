@@ -3,7 +3,7 @@
 
 ## 亮点
 - 16C32G的CPU应用空间 达到20token/s！（比4060笔记本16G内存的联想Y7000p实测还快5t/s，该配置每天能薅1小时）<BR>
-- **20C116G + 24G显存A10的GPU应用空间 达到100tokens/s！！！（该配置每周能薅4+小时，甚至能运行qwen3:30b-a3b-thinking-2507-fp16（性能相当于GPT5mini/Claude4Opus/Gemini2.5Flash/DS R1）和 Qwen3-Next80b-a3b-Q8（至今未上线Ollama）模型）** <BR>
+- **20C116G + 24G显存A10的GPU应用空间 达到100tokens/s！！！（该配置每周能薅4+小时，甚至能运行qwen3:30b-a3b-thinking-2507-fp16（性能相当于GPT5mini/Claude4Opus/Gemini2.5Flash/DS R1，但Cloud Studio应用空间的硬盘都是50GB不满足fp16模型61GB的要求！）和 Qwen3-Next80b-a3b-Q8（至今未上线Ollama）模型）** <BR>
 
 ## 1. 在腾讯Cloud Studio上创建一个只有Ubuntu的应用并安装Ollama
 [https://cloudstudio.net/my-app](https://cloudstudio.net/my-app)
