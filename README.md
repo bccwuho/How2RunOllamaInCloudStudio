@@ -50,12 +50,13 @@ docker run -d --gpus=all\\<BR>
 ### 2）在Docker中下载并启用qwen3:30b-a3b-thinking-2507-q4_K_M 模型
 查看容器 ID 或名称<BR>
 docker ps    <BR>
+假设显示如下<BR>
 /workspace git:(master) docker ps<BR>
 **CONTAINER ID**   IMAGE           COMMAND               CREATED          STATUS          PORTS                                           NAMES<BR>
 **dad073e1a5a7**   ollama/ollama   "/bin/ollama serve"   11 minutes ago   Up 11 minutes   0.0.0.0:11434->11434/tcp, :::11434->11434/tcp   kind_golick<BR>
-假设容器ID为 dad073e1a5a7(如上面运行的例子），运行下面的命令下载并启用qwen3:30b-a3b-thinking-2507-q4_K_M 模型，下载速度一般为20-40MB/s，该模型19GB大约10~15min完成<BR>
+假设容器ID为 dad073e1a5a7(如上面运行的例子），运行下面的命令下载并启用qwen3:30b-a3b-thinking-2507-q4_K_M 模型，下载速度一般为20-40MB/s，该模型19GB大约10-15min完成<BR>
 docker exec -it dad073e1a5a7 ollama run qwen3:30b-a3b-thinking-2507-q4_K_M --verbose<BR>
-此时内存使用了~20G、硬盘使用了~22GB，如果有GPU的话GPU显存使用了18G（T4的话只有16G都占满），GPU占用率80%<BR>
+此时内存使用了20G、硬盘使用了22GB，如果有GPU的话GPU显存使用了18G（T4的话只有16G都占满），GPU占用率80%<BR>
 
 **实测qwen3:30b-a3b-thinking-2507-q4_K_M 模型速度**<BR>
 1）16C32G CPU应用空间 达到17token/s！（该配置每天能薅1小时）<BR>
