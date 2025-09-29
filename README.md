@@ -1,0 +1,2 @@
+# How2RunOllamaInCloudStudio
+如何在腾讯面向开发者的cloud studio上免费运行ollama
