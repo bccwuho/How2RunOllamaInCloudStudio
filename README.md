@@ -9,6 +9,8 @@
 [https://cloudstudio.net/my-app](https://cloudstudio.net/my-app)
 ### 1）创建应用，模板选Ubuntu，应用空间（类似云主机）内存选16C32G及以上CPU主机或者8C32G+16G显存T4主机
 安装完成后，硬盘使用了~0.5GB<BR>
+**Tip:<BR>**
+- **再次进入应用空间时，在“个人中心” - “应用管理” 里点击“继续编辑” ，这样进入应用空间后界面更友好！<BR>**
 ### 2）打开终端，拉取 Ollama 官方镜像（如果未预装）：
 docker pull ollama/ollama<BR>
 安装完成后，硬盘使用了3.6GB<BR>
