@@ -17,27 +17,29 @@ docker run -d \\<BR>
   --restart always \\<BR>
   ollama/ollama<BR>
 此时内存使用了0.8G、硬盘使用了3.6GB<BR>
+<BR>
 ### 1.2）如果应用空间有GPU，直接使用下面的命令启动ollama
 docker run -d --gpus=all\\<BR>
   -v ollama:/root/.ollama \\<BR>
   -p 11434:11434 \\<BR>
   --restart always \\<BR>
   ollama/ollama<BR>
+<BR>
 **如果失败则是因为NVidia显卡在Docker这个Container中运行的关系，用以下方法解决**
 Configure NVIDIA Container Runtime to bypass device filtering：A workaround documented in community reports involves telling the NVIDIA runtime to skip strict device cgroup enforcement by editing its config:
 Edit or create the config file:<BR>
-
+<BR>
 sudo mkdir -p /etc/nvidia-container-runtime<BR>
 sudo nano /etc/nvidia-container-runtime/config.toml<BR>
 Add or ensure the following 2 lines are present:<BR>
-
+<BR>
 [nvidia-container-cli]<BR>
 no-cgroups = true<BR>
 ###The key setting is `no-cgroups = true`, which disables cgroup device rule enforcement and avoids the `bpf_prog_query` call .<BR>
-
+<BR>
 [nvidia-container-runtime]<BR>
 debug = "/tmp/nvidia-container-runtime.log"<BR>
-
+<BR>
 用^x退出编辑后再次运行ollama启动命令就OK了<BR>
 sudo systemctl restart docker<BR>
 docker run -d --gpus=all\\<BR>
@@ -46,21 +48,23 @@ docker run -d --gpus=all\\<BR>
   --restart always \\<BR>
   ollama/ollama<BR>
 此时内存使用了0.8G、硬盘使用了3.6GB<BR>
-
+<BR>
 ### 2）在Docker中下载并启用qwen3:30b-a3b-thinking-2507-q4_K_M 模型
 查看容器 ID 或名称<BR>
 docker ps    <BR>
+<BR>
 假设显示如下<BR>
 /workspace git:(master) docker ps<BR>
 **CONTAINER ID**   IMAGE           COMMAND               CREATED          STATUS          PORTS                                           NAMES<BR>
 **dad073e1a5a7**   ollama/ollama   "/bin/ollama serve"   11 minutes ago   Up 11 minutes   0.0.0.0:11434->11434/tcp, :::11434->11434/tcp   kind_golick<BR>
 假设容器ID为 dad073e1a5a7(如上面运行的例子），运行下面的命令下载并启用qwen3:30b-a3b-thinking-2507-q4_K_M 模型，下载速度一般为20-40MB/s，该模型19GB大约10-15min完成<BR>
 docker exec -it dad073e1a5a7 ollama run qwen3:30b-a3b-thinking-2507-q4_K_M --verbose<BR>
+<BR>
 此时内存使用了20G、硬盘使用了22GB，如果有GPU的话GPU显存使用了18G（T4的话只有16G都占满），GPU占用率80%<BR>
 
 **实测qwen3:30b-a3b-thinking-2507-q4_K_M 模型速度**<BR>
-1）16C32G CPU应用空间 达到17token/s！（该配置每天能薅1小时）<BR>
-2）8C32G + 16G显存T4的GPU应用空间 达到30tokens/s（该配置每周能薅10+小时）<BR>
-3）20C116G + 24G显存A10的GPU应用空间 达到100tokens/s！！！（该配置每周能薅3+小时）<BR>
+1）16C32G CPU应用空间 达到20token/s！（比4060笔记本16G内存的联想Y7000p实测还快5t/s，该配置每天能薅1小时）<BR>
+2）8C32G + 16G显存T4的GPU应用空间 达到30tokens/s（该配置每周能薅11+小时）<BR>
+3）20C116G + 24G显存A10的GPU应用空间 达到100tokens/s！！！（该配置每周能薅4+小时）<BR>
 
 
