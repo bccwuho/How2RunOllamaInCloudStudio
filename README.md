@@ -16,8 +16,9 @@ docker run -d \\<BR>
   -p 11434:11434 \\<BR>
   --restart always \\<BR>
   ollama/ollama<BR>
-此时内存使用了0.8G、硬盘使用了3.6GB<BR>
 <BR>
+此时内存使用了0.8G、硬盘使用了3.6GB<BR>
+
 ### 1.2）如果应用空间有GPU，直接使用下面的命令启动ollama
 docker run -d --gpus=all\\<BR>
   -v ollama:/root/.ollama \\<BR>
@@ -31,6 +32,7 @@ Edit or create the config file:<BR>
 <BR>
 sudo mkdir -p /etc/nvidia-container-runtime<BR>
 sudo nano /etc/nvidia-container-runtime/config.toml<BR>
+<BR>
 Add or ensure the following 2 lines are present:<BR>
 <BR>
 [nvidia-container-cli]<BR>
@@ -47,6 +49,7 @@ docker run -d --gpus=all\\<BR>
   -p 11434:11434 \\<BR>
   --restart always \\<BR>
   ollama/ollama<BR>
+<BR>
 此时内存使用了0.8G、硬盘使用了3.6GB<BR>
 <BR>
 ### 2）在Docker中下载并启用qwen3:30b-a3b-thinking-2507-q4_K_M 模型
@@ -58,6 +61,7 @@ docker ps    <BR>
 **CONTAINER ID**   IMAGE           COMMAND               CREATED          STATUS          PORTS                                           NAMES<BR>
 **dad073e1a5a7**   ollama/ollama   "/bin/ollama serve"   11 minutes ago   Up 11 minutes   0.0.0.0:11434->11434/tcp, :::11434->11434/tcp   kind_golick<BR>
 假设容器ID为 dad073e1a5a7(如上面运行的例子），运行下面的命令下载并启用qwen3:30b-a3b-thinking-2507-q4_K_M 模型，下载速度一般为20-40MB/s，该模型19GB大约10-15min完成<BR>
+<BR>
 docker exec -it dad073e1a5a7 ollama run qwen3:30b-a3b-thinking-2507-q4_K_M --verbose<BR>
 <BR>
 此时内存使用了20G、硬盘使用了22GB，如果有GPU的话GPU显存使用了18G（T4的话只有16G都占满），GPU占用率80%<BR>
