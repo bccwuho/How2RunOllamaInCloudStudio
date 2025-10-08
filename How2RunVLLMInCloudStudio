@@ -1,0 +1,29 @@
+vLLM运行Qwen3-30B-A3B-Thinking-2507-AWQ-4bit量化模型，提供API Web接口给CherryStudio使用
+1）24G显存A10的GPU应用空间5并发吞吐量达到200tokens/s+
+50GB硬盘用了52GB
+==
+安装方法：
+应用空间选Ubuntu + Docker安装vLLM
+API接口：https://2d255b6bdde54e2996aa98333d5bc10d--8000.ap-shanghai2.cloudstudio.club/v1/
+======完整安装过程如下====
+export HF_HOME=~/.cache/huggingface
+mkdir -p "$HF_HOME"
+docker pull vllm/vllm-openai:latest 
+
+docker run --rm --gpus all --ipc=host \
+  -p 8000:8000 \
+  -v "$HF_HOME":/root/.cache/huggingface \
+  vllm/vllm-openai:latest \
+  --model cpatonn/Qwen3-30B-A3B-Thinking-2507-AWQ-4bit \
+  --dtype auto \
+  --max-model-len 16384 \
+  --gpu-memory-utilization 0.90
+==
+如果失败见https://github.com/bccwuho/How2RunOllamaInCloudStudio 1.2的解决方法
+curl http://localhost:8000/v1/chat/completions \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model": "cpatonn/Qwen3-30B-A3B-Thinking-2507-AWQ-4bit",
+    "messages": [{"role":"user","content":"用中文一步步思考：24 * 17 等于多少？"}],
+    "stream": false
+  }'
