@@ -1,5 +1,5 @@
 vLLM运行Qwen3-30B-A3B-Thinking-2507-AWQ-4bit量化模型，提供API Web接口给CherryStudio使用
-1）24G显存A10的GPU应用空间5并发吞吐量达到200tokens/s+
+1）24G显存A10的GPU速度200t/s，6并发吞吐量达到峰值~400t/s
 50GB硬盘用了52GB
 ==
 安装方法：
