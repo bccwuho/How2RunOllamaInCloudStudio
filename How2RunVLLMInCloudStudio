@@ -1,6 +1,8 @@
 vLLM运行Qwen3-30B-A3B-Thinking-2507-AWQ-4bit量化模型，提供API Web接口给CherryStudio使用
-1）20C116G内存24G显存A10的GPU速度200t/s，6并发吞吐量达到峰值300~400t/s（并发数>6后就开始排队等待），GPU用到97%显存用到21.7/22.5但CPU和内存基本都是空闲，50GB硬盘用了53GB但重启后
-   还是可以直接用的（应该是模型文件+vLLM没有超50GB，加上一些临时文件超了）
+1）20C116G内存24G显存A10的GPU速度最大可达200t/s，6并发吞吐量达到峰值300~400t/s（并发数>6后就开始排队等待），GPU用到97%显存用到21.7/22.5但CPU和内存基本都是空闲，50GB硬盘用了53GB但重启后
+   还是可以直接用的（应该是模型文件+vLLM没有超50GB，加上一些临时文件超了），该环境下的极限值最大上下文长度16384和GPU显存利用率0.9
+2）8C140G内存32G显存V100的GPU 由于GPU太老计算能力 7.0，跑不了AWQ模型（计算能力至少为 8.0SM80），所以V100机器建议用GPTQ的量化模型
+
 ==
 安装方法：
 应用空间选Ubuntu + Docker安装vLLM
@@ -10,7 +12,7 @@ export HF_HOME=~/.cache/huggingface
 mkdir -p "$HF_HOME"
 docker pull vllm/vllm-openai:latest 
 
-### 重启后用下面命令启动模型！下面最大上下文长度16384和GPU显存利用率0.9都是目前该环境测下来的极限值，api-key用多个sk-key1,sk-key2测试失败只能一个key！
+### 重启后用下面命令启动模型！api-key用多个sk-key1,sk-key2测试失败只能一个key！
 export HF_HOME=~/.cache/huggingface
 docker run --rm --gpus all --ipc=host \
   -p 8000:8000 \
