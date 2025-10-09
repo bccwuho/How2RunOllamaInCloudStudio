@@ -12,7 +12,7 @@ export HF_HOME=~/.cache/huggingface
 mkdir -p "$HF_HOME"
 docker pull vllm/vllm-openai:latest 
 
-### 重启后用下面命令启动模型！api-key用多个sk-key1,sk-key2测试失败只能一个key！
+### 重启后用下面命令启动模型！api-key用多个sk-key1,sk-key2测试失败只能一个key！24GA10显卡用这个AWQ量化模型
 export HF_HOME=~/.cache/huggingface
 docker run --rm --gpus all --ipc=host \
   -p 8000:8000 \
@@ -23,7 +23,7 @@ docker run --rm --gpus all --ipc=host \
   --dtype auto \
   --max-model-len 16384 \
   --gpu-memory-utilization 0.90
-==
+== 重启后用下面命令启动模型！api-key用多个sk-key1,sk-key2测试失败只能一个key！32GV100显卡用这个，但目前还没有启动成功过？？？
 export HF_HOME=~/.cache/huggingface
 export TORCHDYNAMO_DISABLE=1
 export VLLM_DISABLE_FA2=true
@@ -37,7 +37,7 @@ docker run --rm --gpus all --ipc=host \
   --dtype auto \
   --max-model-len 8192 \
   --gpu-memory-utilization 0.85 \
-  --enable-reasoning --reasoning-parser qwen3
+  --reasoning-parser qwen3
 ====
 
 如果失败见https://github.com/bccwuho/How2RunOllamaInCloudStudio 1.2的解决方法
