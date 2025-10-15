@@ -39,8 +39,11 @@ docker run --rm --gpus all --ipc=host \
   --gpu-memory-utilization 0.85 \
   --reasoning-parser qwen3
 ====
+如果失败报类似下面的错误（本质是nVidia在docker中运行错，要打开一些权限）见https://github.com/bccwuho/How2RunOllamaInCloudStudio 1.2的解决方法
+docker: Error response from daemon: failed to create task for container: failed to create shim task: OCI runtime create failed: runc create failed: unable to start container process: error during container init: error running prestart hook #0: exit status 1, stdout: , stderr: Auto-detected mode as 'legacy'
+nvidia-container-cli: mount error: failed to add device rules: unable to find any existing device filters attached to the cgroup: bpf_prog_query(BPF_CGROUP_DEVICE) failed: operation not permitted: unknown.
 
-如果失败见https://github.com/bccwuho/How2RunOllamaInCloudStudio 1.2的解决方法
+====
 curl http://localhost:8000/v1/chat/completions \
   -H "Content-Type: application/json" \
   -d '{
