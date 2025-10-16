@@ -1,3 +1,9 @@
+## 结论
+- vLLM使用的一些优化手段需要A系列的GPU，V100和T4已经不能支持了;而Ollama上即使无GPU也能用
+- Ollama在A10上的速度能到100t/s、单并发且API无法配key；vLLM速度能到200t/s、不排队能6并发吞吐量达到300-400t/s且API能配单个key了
+- vLLM上目前CloudStudio能跑的最好模型是智力4.3的Qwen3-30B-A3B-Thinking-2507-AWQ-4bit，但24G显存的A10只能跑16K上下文
+- 目前CloudStudio能跑的最好模型是智力4.25-4.3的qwen3:30b-a3b-thinking-2507-q4_K_M
+
 vLLM运行Qwen3-30B-A3B-Thinking-2507-AWQ-4bit量化模型，提供API Web接口给CherryStudio使用
 1）20C116G内存24G显存A10的GPU速度最大可达200t/s，6并发吞吐量达到峰值300~400t/s（并发数>6后就开始排队等待），GPU用到97%显存用到21.7/22.5但CPU和内存基本都是空闲，50GB硬盘用了53GB但重启后
    还是可以直接用的（应该是模型文件+vLLM23GB没有超50GB，加上一些临时文件超了），该环境下的极限值最大上下文长度16384和GPU显存利用率0.9
