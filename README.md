@@ -1,5 +1,5 @@
 # How to run Ollama in Tencent's free Cloud Studio
-如何在腾讯面向开发者的cloud studio上免费用ollama运行Qwen3-30b-a3b-think-2507 Q4量化模型(模型大小19GB，性能相当于GPT5非思考/Claude3.7Sonnet/Deepseek V3-0528模型)，并提供API Web接口给CherryStudio使用<BR>
+如何在腾讯面向开发者的cloud studio上免费用ollama运行Qwen3-30b-a3b-think-2507 Q4量化模型(模型大小19GB，性能相当于智力4.3的GPT5非思考/Claude3.7Sonnet/Deepseek V3-0528模型)，并提供API Web接口给CherryStudio使用<BR>
 
 ## 亮点
 - 16C32G的CPU应用空间 达到20token/s！（比4060笔记本16G内存的联想Y7000p实测还快5t/s，该配置每天能薅1小时）<BR>
