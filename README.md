@@ -26,7 +26,7 @@ docker run -d \\<BR>
 此时内存使用了0.8G、硬盘使用了3.6GB<BR>
 
 ### 1.2）如果应用空间有GPU，直接使用下面的命令启动ollama
-docker run -d --gpus=all\\<BR>
+docker run -d --gpus=all \\<BR>
   -v ollama:/root/.ollama \\<BR>
   -p 11434:11434 \\<BR>
   --restart always \\<BR>
