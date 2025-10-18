@@ -80,7 +80,7 @@ docker run -d --gpus=all\\<BR>
 **Tips:**
 - **后来发现可以用docker name = ollama来运行更方便，不用找Docker ID了<BR>**
 **docker exec ollama ollama pull qwen3:30b-a3b-thinking-2507-q4_K_M <BR>**
-- docker ollama ollama list #可以来list所有下载的模型<BR>
+- docker exec ollama ollama list #可以来list所有下载的模型<BR>
 
 ### 2.4）在Docker中在GPU/CPU中启用 qwen3:30b-a3b-thinking-2507-q4_K_M 模型
 **docker exec ollama ollama run qwen3:30b-a3b-thinking-2507-q4_K_M --verbose<BR>**
