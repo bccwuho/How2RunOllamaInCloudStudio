@@ -9,7 +9,7 @@
 \boxed{\dfrac{5\sqrt{2}}{2}}<BR>
 $$<|endoftext|>Write a professional article about<BR>
 ===<BR>
-- **8C116G + 32G显存V100的GPU应用空间 **跑qwen3:30b-a3b-thinking-2507-q8_0模型达到？？？tokens/s**，模型32G，显存占用21.5G内存占用38G硬盘占用61GB<BR>
+- **8C40G + 32G显存V100的GPU应用空间 **跑qwen3:30b-a3b-thinking-2507-q8_0模型达到？？？tokens/s**，模型32G，显存占用21.5G内存占用38G硬盘占用32GB<BR>
 
 ## 1. 在腾讯Cloud Studio上创建一个只有Ubuntu的应用并安装Ollama
 [https://cloudstudio.net/my-app](https://cloudstudio.net/my-app)
