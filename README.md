@@ -4,12 +4,12 @@
 ## 亮点
 - 16C32G的CPU应用空间 达到20token/s！（比4060笔记本16G内存的联想Y7000p实测还快5t/s，该配置每天能薅1小时）<BR>
 - **20C116G + 24G显存A10的GPU应用空间 达到100tokens/s！！！（该配置每周能薅4+小时，甚至能运行qwen3:30b-a3b-thinking-2507-fp16（性能相当于智力4.375的GPT5mini/Claude4Opus/Gemini2.5Flash/DS R1，但Cloud Studio应用空间的硬盘都是50GB不满足fp16模型61GB的要求！）和 Qwen3-Next80b-a3b-Q8（至今未上线Ollama）模型），最新消息CloudStudio的CVM硬盘扩容到256GB了** <BR>
-- **20C116G + 24G显存A10的GPU应用空间 **跑qwen3:30b-a3b-thinking-2507-q8_0模型达到 13tokens/s**，显存占用21.5G内存占用38G硬盘占用61GB，有点不稳定，目前只成功运行过20-30min最好回答出4.2级别的几何题，可能是由于token产生速度慢导致最后LLM的“脑子”也卡壳了，甚至产生了在官网网页端不会产生的明明题目做出来了还产生了一段莫名其妙的幻觉！！！<BR>
+- **20C116G + 24G显存A10的GPU应用空间 **跑qwen3:30b-a3b-thinking-2507-fp16模型达到 13tokens/s**，模型61G，显存占用21.5G内存占用38G硬盘占用61GB，有点不稳定，目前只成功运行过20-30min最好回答出4.2级别的几何题，可能是由于token产生速度慢导致最后LLM的“脑子”也卡壳了，甚至产生了在官网网页端不会产生的明明题目做出来了还产生了一段莫名其妙的幻觉！！！<BR>
 ===一段莫名其妙的幻觉在endoftext后==<BR>
 \boxed{\dfrac{5\sqrt{2}}{2}}<BR>
 $$<|endoftext|>Write a professional article about<BR>
 ===<BR>
-- **8C116G + 32G显存V100的GPU应用空间 **跑qwen3:30b-a3b-thinking-2507-fp16模型达到？？？tokens/s**，显存占用21.5G内存占用38G硬盘占用61GB<BR>
+- **8C116G + 32G显存V100的GPU应用空间 **跑qwen3:30b-a3b-thinking-2507-q8_0模型达到？？？tokens/s**，模型32G，显存占用21.5G内存占用38G硬盘占用61GB<BR>
 
 ## 1. 在腾讯Cloud Studio上创建一个只有Ubuntu的应用并安装Ollama
 [https://cloudstudio.net/my-app](https://cloudstudio.net/my-app)
