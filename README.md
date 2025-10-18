@@ -4,7 +4,12 @@
 ## 亮点
 - 16C32G的CPU应用空间 达到20token/s！（比4060笔记本16G内存的联想Y7000p实测还快5t/s，该配置每天能薅1小时）<BR>
 - **20C116G + 24G显存A10的GPU应用空间 达到100tokens/s！！！（该配置每周能薅4+小时，甚至能运行qwen3:30b-a3b-thinking-2507-fp16（性能相当于智力4.375的GPT5mini/Claude4Opus/Gemini2.5Flash/DS R1，但Cloud Studio应用空间的硬盘都是50GB不满足fp16模型61GB的要求！）和 Qwen3-Next80b-a3b-Q8（至今未上线Ollama）模型），最新消息CloudStudio的CVM硬盘扩容到256GB了** <BR>
-- **20C116G + 24G显存A10的GPU应用空间 跑qwen3:30b-a3b-thinking-2507-fp16模型达到 13tokens/s，显存占用21.5G内存占用38G硬盘占用61GB，但似乎有点不稳定？？？
+- **20C116G + 24G显存A10的GPU应用空间 **跑qwen3:30b-a3b-thinking-2507-q8_0模型达到 13tokens/s**，显存占用21.5G内存占用38G硬盘占用61GB，有点不稳定，目前只成功运行过20-30min最好回答出4.2级别的几何题，可能是由于token产生速度慢导致最后LLM的“脑子”也卡壳了，甚至产生了在官网网页端不会产生的明明题目做出来了还产生了一段莫名其妙的幻觉！！！<BR>
+===一段莫名其妙的幻觉在endoftext后==<BR>
+\boxed{\dfrac{5\sqrt{2}}{2}}<BR>
+$$<|endoftext|>Write a professional article about<BR>
+===<BR>
+- **8C116G + 32G显存V100的GPU应用空间 **跑qwen3:30b-a3b-thinking-2507-fp16模型达到？？？tokens/s**，显存占用21.5G内存占用38G硬盘占用61GB<BR>
 
 ## 1. 在腾讯Cloud Studio上创建一个只有Ubuntu的应用并安装Ollama
 [https://cloudstudio.net/my-app](https://cloudstudio.net/my-app)
@@ -17,8 +22,9 @@
 安装完成后，硬盘使用了3.6GB<BR>
 
 ## 2. 运行Ollama，并下载启用qwen3:30b-a3b-thinking-2507-q4_K_M 模型（从[ollama.com](https://ollama.com/library/qwen3/tags)得到模型的信息和名字）
-### 1.1）如果应用空间没有GPU使用下面的命令启动ollama
+### 2.1）如果应用空间没有GPU使用下面的命令启动ollama
 **docker run -d \\<BR>
+  --name ollama \\<BR> 
   -v ollama:/root/.ollama \\<BR>
   -p 11434:11434 \\<BR>
   --restart always \\<BR>
@@ -26,8 +32,9 @@
 <BR>**
 此时内存使用了0.8G、硬盘使用了3.6GB<BR>
 
-### 1.2）如果应用空间有GPU，直接使用下面的命令启动ollama
+### 2.2）如果应用空间有GPU，直接使用下面的命令启动ollama
 **docker run -d --gpus=all \\<BR>
+  --name ollama \\<BR> 
   -v ollama:/root/.ollama \\<BR>
   -p 11434:11434 \\<BR>
   --restart always \\<BR>
@@ -59,17 +66,25 @@ docker run -d --gpus=all\\<BR>
 <BR>
 此时内存使用了0.8G、硬盘使用了3.6GB<BR>
 <BR>
-### 2）在Docker中下载并启用qwen3:30b-a3b-thinking-2507-q4_K_M 模型
+### 2.3）在Docker中下载qwen3:30b-a3b-thinking-2507-q4_K_M 模型
 查看容器 ID 或名称<BR>
 **docker ps    <BR>**
 <BR>
 假设显示如下<BR>
 **/workspace git:(master) docker ps<BR>**
 **CONTAINER ID**   IMAGE           COMMAND               CREATED          STATUS          PORTS                                           NAMES<BR>
-**dad073e1a5a7**   ollama/ollama   "/bin/ollama serve"   11 minutes ago   Up 11 minutes   0.0.0.0:11434->11434/tcp, :::11434->11434/tcp   kind_golick<BR>
-假设容器ID为 dad073e1a5a7(如上面运行的例子），运行下面的命令下载并启用qwen3:30b-a3b-thinking-2507-q4_K_M 模型，下载速度一般为20-40MB/s，该模型19GB大约10-15min完成<BR>
+**dad073e1a5a7**   ollama/ollama   "/bin/ollama serve"   11 minutes ago   Up 11 minutes   0.0.0.0:11434->11434/tcp, :::11434->11434/tcp   ollama<BR>
+假设容器ID为 dad073e1a5a7(如上面运行的例子），运行下面的命令下载qwen3:30b-a3b-thinking-2507-q4_K_M 模型，下载速度一般为20-40MB/s，该模型19GB大约10-15min完成<BR>
 <BR>
-**docker exec -it dad073e1a5a7 ollama run qwen3:30b-a3b-thinking-2507-q4_K_M --verbose<BR>**
+**docker exec -it dad073e1a5a7 ollama pull qwen3:30b-a3b-thinking-2507-q4_K_M --verbose<BR>**
+**Tips:**
+- **后来发现可以用docker name = ollama来运行更方便，不用找Docker ID了<BR>**
+**docker exec ollama ollama pull qwen3:30b-a3b-thinking-2507-q4_K_M <BR>**
+- docker ollama ollama list #可以来list所有下载的模型<BR>
+
+### 2.4）在Docker中在GPU/CPU中启用 qwen3:30b-a3b-thinking-2507-q4_K_M 模型
+**docker exec ollama ollama run qwen3:30b-a3b-thinking-2507-q4_K_M --verbose<BR>**
+
 在Ollama的CLI界面中可以进行对话了<BR>
 此时内存使用了20G、硬盘使用了22GB，如果有GPU的话GPU显存使用了18G（T4的话只有16G都占满），GPU占用率80%<BR>
 
