@@ -10,7 +10,7 @@
 \boxed{\dfrac{5\sqrt{2}}{2}}<BR>
 $$<|endoftext|>Write a professional article about<BR>
 ===<BR>
-- **8C40G + 32G显存V100的GPU应用空间 **跑qwen3:30b-a3b-thinking-2507-q8_0模型达到80tokens/s!!!**，模型32G，显存占用30.8G内存占用1硬盘占用34GB；似乎也不大稳定（无回复时可以用 docker stop ollama 和 docker rm ollama后再从2.1或者2.2步重新启动即可；会不会时docker exec -it 交互模式引起的？？？，参见https://docs.ollama.com/docker 这个解决GPU在Docker内的使用问题？？？）使用40-50min最好回答出4.5级别的物理题<BR>
+- **8C40G + 32G显存V100的GPU应用空间 **跑qwen3:30b-a3b-thinking-2507-q8_0模型达到80tokens/s!!!**，模型32G，显存占用30.8G内存占用1硬盘占用34GB；似乎也不大稳定（无回复时可以用 docker stop ollama 和 docker rm ollama后再从2.1或者2.2步重新启动即可；会不会时docker exec -it 交互模式引起的？？？，参见https://docs.ollama.com/docker 这个解决GPU在Docker内的使用问题和https://markaicode.com/ollama-container-memory-limits-docker-optimization？？？）使用40-50min最好回答出4.5级别的物理题<BR>
 
 
 ## 1. 在腾讯Cloud Studio上创建一个只有Ubuntu的应用并安装Ollama
