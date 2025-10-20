@@ -126,6 +126,7 @@ json<BR>
 所以，Ollama 的完整目录在主机上的路径是：/var/lib/docker/volumes/ollama/_data ，在此目录下你会看到：<BR>
 + models/：存放所有模型文件（GGUF）<BR>
 + config.json、logs/ 等<BR>
+4、**不要去尝试FP16，Qwen3-30b-a3b-FP16在4*3090下也只有15tokens/s。参考https://github.com/JerryMouseZ/vlm_qwen3 。甚至Q8也面临比Q4非常更多的不确定性，例如KV Cache造成显存溢出或者内存压力导致IO抖动API Crash等<BR>**
 
 ## 3. CherryStudio集成ollama API 服务
 如下图所示，把刚刚打开的Ollama的API Web服务地址集成到CherryStudio的模型服务中。<BR>
