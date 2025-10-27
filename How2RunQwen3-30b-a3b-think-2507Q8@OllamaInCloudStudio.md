@@ -32,13 +32,13 @@ docker run -d --name ollama \
   --restart always \
   ollama/ollama:latest
 
-Tips：
-1、可以用docker stop ollma 和 docker rm ollama 来停止和删除这个ollama container！然后docker start ollama重启
-2、各个参数的解释
-  --cap-add=IPC_LOCK --ulimit memlock=-1:-1 \    ###这句在CVM下失败，去掉即可，但不知对锁定权重在内存是否能成功？？？
-  -- e OLLAMA_FLASH_ATTENTION=1 \ ###似乎最新版默认已用Flash Attention这种现代LLM技术（速度X2；KV 显存➗2？）
-  -e OLLAMA_GPU_OVERHEAD=6442450944 \ 预留6G显存已经很稳定了；但后来咨询AI发现这个OVERHEAD不会用来预留给KV，所以Linux一般先不设（默认 0）或设 0.5–1 GiB就够了；只有你还要给其它进程留显存，或在 Windows/WDDM 上跑，才考虑到 2 GiB 左右。GitHub 里也有维护者用 **512 MiB（536,870,912 字节）**作为示例预留值。​
-  -e OLLAMA_KV_CACHE_TYPE=f16 \  默认KV Cache的是f16=fp16，实际设为q8_0更省显存且性能几无损失
+Tips：<BR>
+1、可以用docker stop ollma 和 docker rm ollama 来停止和删除这个ollama container！然后docker start ollama重启<BR>
+2、各个参数的解释<BR>
+  --cap-add=IPC_LOCK --ulimit memlock=-1:-1 \    ###这句在CVM下失败，去掉即可，但不知对锁定权重在内存是否能成功？？？<BR>
+  -- e OLLAMA_FLASH_ATTENTION=1 \ ###似乎最新版默认已用Flash Attention这种现代LLM技术（速度X2；KV 显存➗2？）<BR>
+  -e OLLAMA_GPU_OVERHEAD=6442450944 \ 预留6G显存已经很稳定了；但后来咨询AI发现这个OVERHEAD不会用来预留给KV，所以Linux一般先不设（默认 0）或设 0.5–1 GiB就够了；只有你还要给其它进程留显存，或在 Windows/WDDM 上跑，才考虑到 2 GiB 左右。GitHub 里也有维护者用 **512 MiB（536,870,912 字节）**作为示例预留值。​<BR>
+  -e OLLAMA_KV_CACHE_TYPE=f16 \  默认KV Cache的是f16=fp16，实际设为q8_0更省显存且性能几无损失<BR>
 
 **3、遇到类似下面cgroup问题就** <BR>
 ==docker: Error response from daemon: failed to create task for container: failed to create shim task: OCI runtime create failed: runc create failed: unable to start container process: error during container init: error running prestart hook #0: exit status 1, stdout: , stderr: Auto-detected mode as 'legacy'
