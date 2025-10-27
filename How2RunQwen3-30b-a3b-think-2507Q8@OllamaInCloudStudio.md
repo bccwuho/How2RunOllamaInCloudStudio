@@ -84,12 +84,12 @@ PARAMETER use_mlock 1           # 锁定权重在内存，避免 pageout 抖动�
 PARAMETER use_mmap 0            # 进一步禁用 mmap（配合上面 OLLAMA_NO_MMAP，模型参数整包加载减少IO抖动）<BR>
 PARAMETER num_gpu 999  	        # Ollama会尝试把尽可能多的层放到 GPU/ num_gpu是加载到GPU的层数，比ollama默认的速度更快一点但占用VRAM更多更激进一点？？？但也报错了，放弃该参数<BR>
 
-**用刚做好的Modelfile创建带参数的模型别名**
-**docker exec -it ollama ollama create qwen3-30b-a3b-2507-Q8:ctx32k-mlock -f /root/Modelfile**
+**用刚做好的Modelfile创建带参数的模型别名**<BR>
+docker exec -it ollama ollama create qwen3-30b-a3b-2507-Q8:ctx32k-mlock -f /root/Modelfile
 
 ## 2.3 运行模型
 ### 2.3.1 交互运行（CLI）
-docker exec -it ollama ollama run qwen3-30b-a3b-2507-Q8:ctx32k-mlock --verbose
+**docker exec -it ollama ollama run qwen3-30b-a3b-2507-Q8:ctx32k-mlock --verbose**
 
 Tips：<BR>
 **用docker logs -f ollama | grep -E 'memory\.|overhead|offload to cuda' 看KV在GPU和CPU中如何分配的（22.5G显存的A10）：** <BR>
