@@ -79,7 +79,7 @@ docker exec  ollama cat /root/Modelfile #来检查文件是否写入正确
 
 Tips：参数说明如下  
 PARAMETER num_ctx 32768         # 32K 上下文
-PARAMETER num_predict 15360     # 最多一次性输出 ~15K，原来设16K，后来发现Cherry Stuidio16K输出截断+预留16K下文再+最初的Prompt会导致超32K，会KV cache清空，-5问题继续就会prefill超时！所以改成15K避免之；再后来太短也不行，-5这道题有时会思考15-20K，思考中截断cherry studio不会把思考中的tokens变成上下文从而又要重新开始做题了；**所以按这个说法（KVcache会清空）应该设为20K（32K-12K上文Prefill最大数见后面的阐述），这样在32K上下文能解决的范围内，最大解决的问题输入是12K，并尽可能1次做对（最长输出20K，对应推理时间~30min）！！！**Prefill 的计算复杂度是 O(N²)（主要来自 Attention 的 QK^T 计算），而 Decode 是 O(N)（每次只算一个 token 对全部历史的 attention）。因此在 8–12K 这类长度时看到的 Prefill/Decode 比值常常只有 ~1–3×；只有在短上下文或强批处理时，Prefill 才更容易达到 10× 以上最高100x。
+PARAMETER num_predict 15360     # 最多一次性输出 \~15K，原来设16K，后来发现Cherry Stuidio16K输出截断+预留16K下文再+最初的Prompt会导致超32K，会KV cache清空，-5问题继续就会prefill超时！所以改成15K避免之；再后来太短也不行，-5这道题有时会思考15-20K，思考中截断cherry studio不会把思考中的tokens变成上下文从而又要重新开始做题了；**所以按这个说法（KVcache会清空）应该设为20K（32K-12K上文Prefill最大数见后面的阐述），这样在32K上下文能解决的范围内，最大解决的问题输入是12K，并尽可能1次做对（最长输出20K，对应推理时间\~30min）！！！**Prefill 的计算复杂度是 O(N²)（主要来自 Attention 的 QK^T 计算），而 Decode 是 O(N)（每次只算一个 token 对全部历史的 attention）。因此在 8–12K 这类长度时看到的 Prefill/Decode 比值常常只有 \~1–3×；只有在短上下文或强批处理时，Prefill 才更容易达到 10× 以上最高100x。
 PARAMETER num_keep -1           # 可能是默认，最大限度保留历史到 KV，但仍然不超过 num_ctx 上下文 
 PARAMETER num_keep 0            # 不保留历史到 KV，旧消息在 num_ctx 内重算 KV；如果设成0，则如果历史消息很长时Prefill就有可能超时（CherryStudio是5min，在几何题-5第一次输出16K后再继续时就会超时失败导致历史消息>=16K的对话进行不下去，并且挂住系统一段时间影响其他对话直到这个Prefill结束大约20min左右）
 PARAMETER use_mlock 1           # 锁定权重在内存，避免 pageout 抖动， warning: parameter use_mlock is deprecated
@@ -109,14 +109,14 @@ time=2025-10-22T02:17:58.181Z level=DEBUG source=device.go:238 msg="total memory
 2、希望留6G显存给KV Cache（对应KV在FP16下能预留64K的上下文）
 3、num_keep设为0，保证以前的对话不保留在KV，之前的对话在下面num_ctx长度内会被重新计算KV（这个不保留KV对多个对话是最小化KV的结果）
 4、num_ctx设为32K，32K上下文的对话，最大会产生3G显存需求（KV cache用默认fp16的情况下）
-5、num_predict设为15K，一次性最大输出达到~15K时会截断
+5、num_predict设为15K，一次性最大输出达到\~15K时会截断
 6、使用mlock把模型权重文件锁定在内存中，避免Pageout（在内存有压力时例如内存占用达80-85%时）产生IO抖动造成API的crash（无反应，要靠等待20min以上或重启Docker来恢复）
 7、禁用mmap模型参数整包加载减少IO抖动，避免crash
 但是最后发现Crash的核心原因是：
 1）因为没设置OVERHEAD在其他耗显存时（非模型权重+KV cache）突然爆显存导致Crash（发现过1次）；这个主要靠设置OLLAMA_GPU_OVERHEAD来解决
 同时即使预留了显存给KV Cache，也会在多对话且长上下文时超过原来的预留，这样显存会不够，就会有显存和内存间传输，就有可能会导致crash；这个靠OLLAMA_KV_CACHE_TYPE=q8_0+调节num_ctx/num_predict/num_gpu来解决
 2）模型参数不常驻显存+内存，在内存紧张时（>=85%）或只要是默认启用mmap时就有可能与硬盘Pageout时会IO抖动就有可能会导致crash；这个主要靠内存足够大和禁用mmap来解决
-3）最多的情况：首字节的Prefill阶段过长Timeout后导致Crash（Prefill超5分钟后发送给Cherry Studio端，但Cherry Studio已经timeout了所以ollama进程就锁死在那里），通过num_keep=-1使得历史消息的KV Cache最大化加速，但当前轮的Prompt与历史消息之间也要计算KV，此时如果历史消息过长且速度过慢就可能5minTimeout，目前OLLAMA_KV_CACHE_TYPE=f16时实测8K历史消息+继续OK，16K历史消息+199tokens Prompt卡壳；这个靠OLLAMA_KV_CACHE_TYPE=q8_0提高速度来解决，实测KV=q8_0时KV cache 1G在GPU0.5G在CPU，上文最长可达12-13K才5minTimeout~a²=（12k）²KV计算量，如果始终在一个对话里靠KV cache的话即使达到32K上下文在输出16K后+"继续"也OK了因为只有~2ab=（16K*2*2）计算量（其中a=历史消息tokens数，b=当前prompt的tokens数）
+3）最多的情况：首字节的Prefill阶段过长Timeout后导致Crash（Prefill超5分钟后发送给Cherry Studio端，但Cherry Studio已经timeout了所以ollama进程就锁死在那里），通过num_keep=-1使得历史消息的KV Cache最大化加速，但当前轮的Prompt与历史消息之间也要计算KV，此时如果历史消息过长且速度过慢就可能5minTimeout，目前OLLAMA_KV_CACHE_TYPE=f16时实测8K历史消息+继续OK，16K历史消息+199tokens Prompt卡壳；这个靠OLLAMA_KV_CACHE_TYPE=q8_0提高速度来解决，实测KV=q8_0时KV cache 1G在GPU0.5G在CPU，上文最长可达12-13K才5minTimeout\~a²=（12k）²KV计算量，如果始终在一个对话里靠KV cache的话即使达到32K上下文在输出16K后+"继续"也OK了因为只有~2ab=（16K*2*2）计算量（其中a=历史消息tokens数，b=当前prompt的tokens数）
 ===
 
 #### 2.3.2 或者走 HTTP API（默认 11434）来测试
@@ -140,5 +140,5 @@ curl http://localhost:11434/api/generate -d '{
 4、禁用mmap<BR>
 **5、Optional：PARAMETER num_ctx 32768**        # 32K 上下文 和 PARAMETER num_predict 20480     # 最多一次性输出 20K<BR>
 6、这样在目标32K上下文问题（最大输出20K的）,KV cache不考虑flashAttention（可能是默认）和默认KV=fp16的情况下最大预留是3GB（部分在1.9G在显存1.1G在内存，约等于模型权重在VRAM和RAM上的比例）；**KV=q8_0时最大预留是1.5GB，1G在显存，0.5G在内存**<BR>
-🔴5）**现在本地跑LLM，最重要的是显存够加载完整的权重文件+预留KV Cache（32Kctx默认F16对于Qwen3-30b-a3b~3GB）；其次才是GPU，主流4070算力足够但16G显存不够，所以想用得好还要上24G4090或32G5090，成本依旧高；32G-128G大内存AMD8745（核显780接近1060）/AI-MAX 390（核显接近4060）可能是性价比高一点的替代**
+🔴5）**现在本地跑LLM，最重要的是显存够加载完整的权重文件+预留KV Cache（32Kctx默认F16对于Qwen3-30b-a3b\~3GB）；其次才是GPU，主流4070算力足够但16G显存不够，所以想用得好还要上24G4090或32G5090，成本依旧高；32G-128G大内存AMD8745（核显780接近1060）/AI-MAX 390（核显接近4060）可能是性价比高一点的替代**
 🔴6）**现阶段（2025/10）消费级GPU机器上最佳选择：从业务上跑Qwen3-30b-a3b-think-AWQ4模型（智力GPT4.3，与新版DS V3相当）@vLLM（擅长纯GPU）最合适6并发吞吐量能达200-300t/s；硬要上Qwen3-30b-a3b-Q8的话只能勉强Ollama一个人玩且上下文32KAI-MAX390可能达到40t/s？？？极限方案可能是15K元的128GAI-MAX390跑Qwen3-30b-a3b-FP16（与老版DS R1相当）@vLLM单人达到40t/s？？？**
