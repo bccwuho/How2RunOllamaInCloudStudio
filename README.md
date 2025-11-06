@@ -132,3 +132,14 @@ json<BR>
 如下图所示，把刚刚打开的Ollama的API Web服务地址集成到CherryStudio的模型服务中。<BR>
 ![CherryStudio集成ollama API 服务](cherryStudio1.png)
 
+# 后记
+【测试中】在A100机器上，要如下运行命令，使用0.1.32版本对CUDA12/13友好，且 要加上--runtime=nvidia 这个命令，否则Qwen3-30b-a3b-FP16 只会加载在CPU上？？？
+docker pull ollama/ollama:0.1.32
+docker stop ollama
+docker rm ollama
+docker run -d --runtime=nvidia --gpus all \
+  --name ollama \
+  -v ollama:/root/.ollama \
+  -p 11434:11434 \
+  --restart always \
+  ollama/ollama:0.1.32
