@@ -13,38 +13,42 @@ vLLM运行Qwen3-30B-A3B-Thinking-2507-AWQ-4bit量化模型，提供API Web接口
 API接口：https://2d255b6bdde54e2996aa98333d5bc10d--8000.ap-shanghai2.cloudstudio.club/v1/   <BR>
 ======完整安装过程如下====<BR>
 ```bash
-export HF_HOME=~/.cache/huggingface   <BR>
-mkdir -p "$HF_HOME"                  <BR>
-docker pull vllm/vllm-openai:latest    <BR>
+export HF_HOME=~/.cache/huggingface   
+mkdir -p "$HF_HOME"                  
+docker pull vllm/vllm-openai:latest    
+```
 
 # 重启后用下面命令启动模型！api-key用多个sk-key1,sk-key2测试失败只能一个key！24GA10显卡用这个AWQ量化模型
 ```bash
-export HF_HOME=~/.cache/huggingface                  <BR>
-docker run --rm --gpus all --ipc=host \               <BR>
-  -p 8000:8000 \                                    <BR>
-  -v "$HF_HOME":/root/.cache/huggingface \         <BR>
-  vllm/vllm-openai:latest \                        <BR>
-  --model cpatonn/Qwen3-30B-A3B-Thinking-2507-AWQ-4bit \      <BR>
-  --api-key sk-123 \                                 <BR>
-  --dtype auto \                                    <BR>
-  --max-model-len 16384 \                           <BR>
-  --gpu-memory-utilization 0.90                     <BR>
+export HF_HOME=~/.cache/huggingface                  
+docker run --rm --gpus all --ipc=host \               
+  -p 8000:8000 \                                    
+  -v "$HF_HOME":/root/.cache/huggingface \         
+  vllm/vllm-openai:latest \                       
+  --model cpatonn/Qwen3-30B-A3B-Thinking-2507-AWQ-4bit \      
+  --api-key sk-123 \                                 
+  --dtype auto \                                    
+  --max-model-len 16384 \                           
+  --gpu-memory-utilization 0.90
+```
+    
 == 重启后用下面命令启动模型！api-key用多个sk-key1,sk-key2测试失败只能一个key！32GV100显卡用这个，但目前还没有启动成功过？？？   <BR>
-export HF_HOME=~/.cache/huggingface               <BR>
-export TORCHDYNAMO_DISABLE=1                     <BR>
-export VLLM_DISABLE_FA2=true                     <BR>
+```
+export HF_HOME=~/.cache/huggingface               
+export TORCHDYNAMO_DISABLE=1                     
+export VLLM_DISABLE_FA2=true                     
 
-```bash
-docker run --rm --gpus all --ipc=host \          <BR>
-  -p 8000:8000 \                                  <BR>
-  -v "$HF_HOME":/root/.cache/huggingface \          <BR>
-  vllm/vllm-openai:latest \                         <BR>
-  --model btbtyler09/Qwen3-30B-A3B-Thinking-2507-gptq-4bit \       <BR>
-  --api-key sk-123 \                                  <BR>
-  --dtype auto \                                        <BR>
-  --max-model-len 8192 \                                  <BR>
-  --gpu-memory-utilization 0.85 \                         <BR>
-  --reasoning-parser qwen3                            <BR>
+docker run --rm --gpus all --ipc=host \          
+  -p 8000:8000 \                                  
+  -v "$HF_HOME":/root/.cache/huggingface \          
+  vllm/vllm-openai:latest \                        
+  --model btbtyler09/Qwen3-30B-A3B-Thinking-2507-gptq-4bit \       
+  --api-key sk-123 \                                  
+  --dtype auto \                                        
+  --max-model-len 8192 \                                  
+  --gpu-memory-utilization 0.85 \                         
+  --reasoning-parser qwen3                            <
+```
 ====
 如果失败报类似下面的错误（本质是nVidia在docker中运行错，要打开一些权限）见https://github.com/bccwuho/How2RunOllamaInCloudStudio 1.2的解决方法    <BR>
 docker: Error response from daemon: failed to create task for container: failed to create shim task: OCI runtime create failed: runc create failed: unable to start container process: error during container init: error running prestart hook #0: exit status 1, stdout: , stderr: Auto-detected mode as 'legacy' <BR>
@@ -52,10 +56,11 @@ nvidia-container-cli: mount error: failed to add device rules: unable to find an
 
 ====
 ```bash
-curl http://localhost:8000/v1/chat/completions \       <BR>
-  -H "Content-Type: application/json" \                <BR>
-  -d '{                                                 <BR>
-    "model": "cpatonn/Qwen3-30B-A3B-Thinking-2507-AWQ-4bit",          <BR>
-    "messages": [{"role":"user","content":"用中文一步步思考：24 * 17 等于多少？"}],       <BR>
-    "stream": false                                     <BR>
+curl http://localhost:8000/v1/chat/completions \       
+  -H "Content-Type: application/json" \                
+  -d '{                                                 
+    "model": "cpatonn/Qwen3-30B-A3B-Thinking-2507-AWQ-4bit",          
+    "messages": [{"role":"user","content":"用中文一步步思考：24 * 17 等于多少？"}],       
+    "stream": false                                     
   }'    <BR>
+```
