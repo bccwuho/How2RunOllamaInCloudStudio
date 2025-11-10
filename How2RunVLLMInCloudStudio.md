@@ -12,11 +12,13 @@ vLLM运行Qwen3-30B-A3B-Thinking-2507-AWQ-4bit量化模型，提供API Web接口
 应用空间选Ubuntu + Docker安装vLLMhttps://github.com/bccwuho/How2RunOllamaInCloudStudio/blob/main/How2RunVLLMInCloudStudio.md  <BR>
 API接口：https://2d255b6bdde54e2996aa98333d5bc10d--8000.ap-shanghai2.cloudstudio.club/v1/   <BR>
 ======完整安装过程如下====<BR>
+```bash
 export HF_HOME=~/.cache/huggingface   <BR>
 mkdir -p "$HF_HOME"                  <BR>
 docker pull vllm/vllm-openai:latest    <BR>
 
 # 重启后用下面命令启动模型！api-key用多个sk-key1,sk-key2测试失败只能一个key！24GA10显卡用这个AWQ量化模型
+```bash
 export HF_HOME=~/.cache/huggingface                  <BR>
 docker run --rm --gpus all --ipc=host \               <BR>
   -p 8000:8000 \                                    <BR>
@@ -32,6 +34,7 @@ export HF_HOME=~/.cache/huggingface               <BR>
 export TORCHDYNAMO_DISABLE=1                     <BR>
 export VLLM_DISABLE_FA2=true                     <BR>
 
+```bash
 docker run --rm --gpus all --ipc=host \          <BR>
   -p 8000:8000 \                                  <BR>
   -v "$HF_HOME":/root/.cache/huggingface \          <BR>
@@ -48,6 +51,7 @@ docker: Error response from daemon: failed to create task for container: failed 
 nvidia-container-cli: mount error: failed to add device rules: unable to find any existing device filters attached to the cgroup: bpf_prog_query(BPF_CGROUP_DEVICE) failed: operation not  <BR>permitted: unknown. <BR>
 
 ====
+```bash
 curl http://localhost:8000/v1/chat/completions \       <BR>
   -H "Content-Type: application/json" \                <BR>
   -d '{                                                 <BR>
