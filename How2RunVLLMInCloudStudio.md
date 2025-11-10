@@ -3,10 +3,10 @@
 - **Qwen3-30B-A3B-Thinking-2507-AWQ-4bit在Ollama@A10上的速度能到100t/s、单并发且API无法配key；vLLM速度能到200t/s、不排队能6并发吞吐量达到300-400t/s且API能配单个key了，相当优秀，但24G显存的A10只能跑16K上下文**
 - vLLM上目前CloudStudio能跑的最好模型是智力4.3的Qwen3-30B-A3B-Thinking-2507-AWQ-4bit，
 
-vLLM运行Qwen3-30B-A3B-Thinking-2507-AWQ-4bit量化模型，提供API Web接口给CherryStudio使用
-1）20C116G内存24G显存A10的GPU速度最大可达200t/s，6并发吞吐量达到峰值300~400t/s（并发数>6后就开始排队等待），GPU用到97%显存用到21.7/22.5但CPU和内存基本都是空闲，50GB硬盘用了53GB但重启后
-   还是可以直接用的（应该是模型文件+vLLM23GB没有超50GB，加上一些临时文件超了），该环境下的极限值最大上下文长度16384和GPU显存利用率0.9
-2）8C140G内存32G显存V100的GPU 由于GPU太老计算能力 7.0，跑不了AWQ模型（计算能力至少为 8.0SM80），所以V100机器建议用GPTQ的量化模型
+vLLM运行Qwen3-30B-A3B-Thinking-2507-AWQ-4bit量化模型，提供API Web接口给CherryStudio使用 <BR>
+1）20C116G内存24G显存A10的GPU速度最大可达200t/s，6并发吞吐量达到峰值300~400t/s（并发数>6后就开始排队等待），GPU用到97%显存用到21.7/22.5但CPU和内存基本都是空闲，50GB硬盘用了53GB但重启后 
+   还是可以直接用的（应该是模型文件+vLLM23GB没有超50GB，加上一些临时文件超了），该环境下的极限值最大上下文长度16384和GPU显存利用率0.9  <BR>
+2）8C140G内存32G显存V100的GPU 由于GPU太老计算能力 7.0，跑不了AWQ模型（计算能力至少为 8.0SM80），所以V100机器建议用GPTQ的量化模型 <BR>
 
 # 安装方法：
 应用空间选Ubuntu + Docker安装vLLMhttps://github.com/bccwuho/How2RunOllamaInCloudStudio/blob/main/How2RunVLLMInCloudStudio.md  <BR>
