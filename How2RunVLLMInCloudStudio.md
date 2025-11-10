@@ -89,8 +89,9 @@ curl http://localhost:8000/v1/chat/completions \
 
 ## 2. Qwen3-30B-A3B-Thinking-2507-FP8运行在vLLM@48C196G内存48G显存\（实际45G\）L40
 ### 2.1 一个命令安装vLLM + 加载Qwen3-30B-A3B-Thinking-2507-FP8模型（模型31GB最大上下文100K，KV Cache大致11G把45G显存基本用足了！） 和 启动API服务
+**纯保留容器（最省事；不映射卷）, 重启后不会重下，但如果以后你 docker rm 了容器，缓存就跟着没了。**
 ```bash
-docker run --rm -it --gpus all \
+docker run --name vllm-qwen -d --gpus all \
   --ipc=host \
   -p 8000:8000 \
   docker.io/vllm/vllm-openai:latest \
@@ -100,6 +101,13 @@ docker run --rm -it --gpus all \
   --max-model-len 100000 \
   --api-key sk-123
 ```
+
+**之后用下面命令**
+docker stop vllm-qwen               # 停止
+docker start vllm-qwen              # 后台启动
+docker logs -f vllm-qwen            # 看日志
+**想要前台看日志启动：docker start -ai vllm-qwen**
+
 
 ### 2.2 本地测试
 ```bash
