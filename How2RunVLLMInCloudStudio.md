@@ -50,11 +50,27 @@ docker run --rm --gpus all --ipc=host \
   --reasoning-parser qwen3                            <
 ```
 ====
-如果失败报类似下面的错误（本质是nVidia在docker中运行错，要打开一些权限）见https://github.com/bccwuho/How2RunOllamaInCloudStudio 1.2的解决方法    <BR>
+## 如果遇到类似下面cgroup问题，例如失败报类似下面的错误（本质是nVidia在docker中运行错，要打开一些权限）
 docker: Error response from daemon: failed to create task for container: failed to create shim task: OCI runtime create failed: runc create failed: unable to start container process: error during container init: error running prestart hook #0: exit status 1, stdout: , stderr: Auto-detected mode as 'legacy' <BR>
 nvidia-container-cli: mount error: failed to add device rules: unable to find any existing device filters attached to the cgroup: bpf_prog_query(BPF_CGROUP_DEVICE) failed: operation not  <BR>permitted: unknown. <BR>
 
-====
+```bash
+sudo mkdir -p /etc/nvidia-container-runtime
+sudo nano /etc/nvidia-container-runtime/config.toml
+
+Add or ensure the following 2 lines are present:
+
+[nvidia-container-cli]
+no-cgroups = true
+###The key setting is no-cgroups = true, which disables cgroup device rule enforcement and avoids the bpf_prog_query call .
+
+[nvidia-container-runtime]
+debug = "/tmp/nvidia-container-runtime.log"
+
+用^x（按CTRL+X）退出编辑后再次运行ollama启动命令就OK了
+```
+
+# 测试
 ```bash
 curl http://localhost:8000/v1/chat/completions \       
   -H "Content-Type: application/json" \                
