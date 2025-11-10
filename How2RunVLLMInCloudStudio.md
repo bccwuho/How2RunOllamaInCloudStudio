@@ -4,7 +4,7 @@
   🔴**Qwen3-30B-A3B-Thinking-2507-FP8实测在vLLM@48C196G内存48G显存L40上单发速度能到~100t/s、不排队能6并发吞吐量达到~240/s且API能配单个key了，且上下文能到100K，性能相当优秀!!!**
 - vLLM上目前CloudStudio能跑的最好模型是智力4.35的Qwen3-30B-A3B-Thinking-2507-FP8 和 智力4.3的Qwen3-30B-A3B-Thinking-2507-AWQ-4bit
 
-## 0.腾讯云CloudStudio的CUDA驱动 和 Docker 和 NVIDIA Container Toolkit都已经装好，但如果遇到类似下面cgroup问题，例如失败报类似下面的错误\（本质是nVidia在docker中运行错，要打开一些权限\）按一下方法解决即可
+## 0.腾讯云CloudStudio的CUDA驱动 和 Docker 和 NVIDIA Container Toolkit都已经装好，但如果遇到类似下面cgroup问题，例如失败报类似下面的错误（本质是nVidia在docker中运行错，要打开一些权限）按一下方法解决即可
 docker: Error response from daemon: failed to create task for container: failed to create shim task: OCI runtime create failed: runc create failed: unable to start container process: error during container init: error running prestart hook #0: exit status 1, stdout: , stderr: Auto-detected mode as 'legacy' <BR>
 nvidia-container-cli: mount error: failed to add device rules: unable to find any existing device filters attached to the cgroup: bpf_prog_query(BPF_CGROUP_DEVICE) failed: operation not  <BR>permitted: unknown. <BR>
 
@@ -87,7 +87,7 @@ curl http://localhost:8000/v1/chat/completions \
   }'    <BR>
 ```
 
-## 2. Qwen3-30B-A3B-Thinking-2507-FP8运行在vLLM@48C196G内存48G显存\（实际45G\）L40
+## 2. Qwen3-30B-A3B-Thinking-2507-FP8运行在vLLM@48C196G内存48G显存（实际45G）L40
 ### 2.1 一个命令安装vLLM + 加载Qwen3-30B-A3B-Thinking-2507-FP8模型（模型31GB最大上下文100K，KV Cache大致11G把45G显存基本用足了！） 和 启动API服务
 **纯保留容器（最省事；不映射卷）, 重启后不会重下，但如果以后你 docker rm 了容器，缓存就跟着没了。**
 ```bash
