@@ -1,7 +1,7 @@
 # 结论
 - **vLLM使用的一些优化手段需要A系列的GPU，所以A10和L40可以，V100和T4已经不能支持了;而Ollama上即使无GPU也能用**
 - **Qwen3-30B-A3B-Thinking-2507-AWQ-4bit在Ollama@A10上的速度能到100t/s、单并发且API无法配key；vLLM速度能到200t/s、不排队能6并发吞吐量达到300-400t/s且API能配单个key了，相当优秀，但24G显存的A10只能跑16K上下文**
-  🔴**Qwen3-30B-A3B-Thinking-2507-FP8实测在vLLM@48C196G内存48G显存L40上单发速度能到~100t/s、不排队能6并发吞吐量达到~240/s且API能配单个key了，且上下文能到100K，性能相当优秀!!!**
+- 🔴**Qwen3-30B-A3B-Thinking-2507-FP8实测在vLLM@48C196G内存48G显存L40上单发速度能到100t/s、不排队能6并发吞吐量达到240/s且API能配单个key了，且上下文能到100K，性能相当优秀!!!**
 - vLLM上目前CloudStudio能跑的最好模型是智力4.35的Qwen3-30B-A3B-Thinking-2507-FP8 和 智力4.3的Qwen3-30B-A3B-Thinking-2507-AWQ-4bit
 
 ## 0.腾讯云CloudStudio的CUDA驱动 和 Docker 和 NVIDIA Container Toolkit都已经装好，但如果遇到类似下面cgroup问题，例如失败报类似下面的错误（本质是nVidia在docker中运行错，要打开一些权限）按一下方法解决即可
