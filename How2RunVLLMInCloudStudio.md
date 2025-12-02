@@ -119,4 +119,36 @@ curl http://localhost:8000/v1/chat/completions \
         "messages": [{"role":"user","content":"你好，请用一句话自我介绍"}]   \
       }'
 ```
+### 2.3 后记：后来发现如上直接做不行了，8000能起来但连接一直失败；后来发现要把模型先拉到本地，再启动就OK了
+```bash
+# 1) 准备目录（确保你有权限）
+sudo mkdir -p /models && sudo chown "$USER":"$USER" /models
+
+# 2) 用 Python 的 snapshot_download 拉取（等价于 huggingface-cli download）
+python3 - <<'PY'
+from huggingface_hub import snapshot_download
+snapshot_download(
+    repo_id="Qwen/Qwen2.5-7B-Instruct",
+    local_dir="/models/Qwen2.5-7B-Instruct",
+    local_dir_use_symlinks=False
+)
+PY
+```
+**再用本地权重启动vLLM就OK了**
+```bash
+docker rm -f vllm-qwen 2>/dev/null
+
+docker run --gpus all --network host --name vllm-qwen \
+  -v /models:/models \
+  -e VLLM_USE_FLASHINFER=0 \
+  -e VLLM_LOGGING_LEVEL=DEBUG \
+  vllm/vllm-openai:0.11.2 \
+  --host 0.0.0.0 \
+  --model /models/Qwen2.5-7B-Instruct \
+  --download-dir /models \
+  --max-model-len 8192 \
+  --gpu-memory-utilization 0.80 \
+  --enforce-eager \
+  --port 8000
+```
 
